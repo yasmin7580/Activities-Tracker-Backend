@@ -2,6 +2,10 @@ const express = require('express');
 const { MongoClient, ObjectId } = require("mongodb")
 const app = express()
 const port = 3000
+
+const dns = require('dns');
+dns.setServers(['8.8.8.8', '8.8.4.4']);
+
 const cors = require("cors")
 app.use(cors())
 app.use(express.json())
