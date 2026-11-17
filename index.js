@@ -32,10 +32,30 @@ async function connectToMongoDB() {
 
         })
 
-        app.get("/activities", async (req, res) => {
-            const result = await activitiesCollection.find().toArray()
-            res.send(result)
 
+        app.get("/activities", async (req, res) => {
+            // today , all 
+            const { date } = req.query
+            let query = {}
+            if (date) {
+
+                const today = new Date()
+                today.setHours(0, 0, 0, 0)
+
+                const tomorrow = new Date()
+                tomorrow.setDate(tomorrow.getDate() + 1)
+                tomorrow.setHours(0, 0, 0, 0)
+
+                query = {
+                    startTime: {
+                        $gte: today.toISOString(),
+                        $lte: tomorrow.toISOString()
+                    }
+                }
+                console.log({ today, tomorrow })
+            }
+            const result = await activitiesCollection.find(query).sort({_id:-1}).toArray()
+            res.send(result)
         })
 
 
